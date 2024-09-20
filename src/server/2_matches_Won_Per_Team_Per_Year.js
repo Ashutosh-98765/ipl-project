@@ -1,36 +1,64 @@
+// 2. Number of matches won per team per year in IPL.
+
 import fs from 'fs';
 import matches from '../data/matches.json' assert { type: 'json' }
 
 
 
-function matchesWonTeamPerYear(){
-    let wonMatchesPerYear = {};
-    for(let i=0; i<matches.length; i++){
-        let season = matches[i]['season']
-        let winner = matches[i]['winner']
-        if(wonMatchesPerYear[season]){
-            if(wonMatchesPerYear[season][winner]){
-                wonMatchesPerYear[season][winner]++;
+// function matchesWonTeamPerYear(){
+//     let wonMatchesPerYear = {};
+//     for(let i=0; i<matches.length; i++){
+//         let season = matches[i]['season']
+//         let winner = matches[i]['winner']
+//         if(wonMatchesPerYear[season]){
+//             if(wonMatchesPerYear[season][winner]){
+//                 wonMatchesPerYear[season][winner]++;
+//             }
+//             else{
+//                 if(winner === ""){
+//                     continue;
+//                 }
+//                 else{
+//                     wonMatchesPerYear[season][winner] =1;
+//                 }
+//             }
+//         }
+//         else{
+//             wonMatchesPerYear[season] = {};
+//             wonMatchesPerYear[season][winner] = 1;
+//         }
+//     }
+//     return wonMatchesPerYear;
+
+// }
+
+function matches_Won_Per_TeamPerYear(){
+    let matchesWonTeamPerYear = {};
+    for(let i=0; i<matches.length;i++){
+        let { season , winner } = matches[i];
+        if(matchesWonTeamPerYear[season]){
+            if(matchesWonTeamPerYear[season][winner]){
+                matchesWonTeamPerYear[season][winner]++;
             }
             else{
                 if(winner === ""){
                     continue;
                 }
                 else{
-                    wonMatchesPerYear[season][winner] =1;
+                    matchesWonTeamPerYear[season][winner] = 1;
                 }
             }
         }
-        else{
-            wonMatchesPerYear[season] = {};
-            wonMatchesPerYear[season][winner] = 1;
+            else{
+                matchesWonTeamPerYear[season]={};
+                matchesWonTeamPerYear[season][winner] = 1;
+            }
         }
+        return matchesWonTeamPerYear
     }
-    return wonMatchesPerYear;
 
-}
 
-let result = matchesWonTeamPerYear();
+let result = matches_Won_Per_TeamPerYear();
 
 
 const jsonData = JSON.stringify(result, null, 2);
