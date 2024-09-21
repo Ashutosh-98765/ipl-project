@@ -1,6 +1,6 @@
 // 2. Number of matches won per team per year in IPL.
 
-import matches from '../data/matches.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
 
 function matches_Won_Per_TeamPerYear(){
     let matchesWonTeamPerYear = matches.reduce((acc , {season , winner}) => {

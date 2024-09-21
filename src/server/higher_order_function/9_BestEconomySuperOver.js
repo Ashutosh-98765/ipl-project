@@ -1,4 +1,4 @@
-import deliveries from  '../data/deliveries.json' assert {type : 'json'};
+import deliveries from  '../../data/deliveries.json' assert {type : 'json'};
 
 function best_Economy_SuperOver(){
     let bowlerStats = deliveries.reduce((acc , {bowler , is_super_over, total_runs}) => {

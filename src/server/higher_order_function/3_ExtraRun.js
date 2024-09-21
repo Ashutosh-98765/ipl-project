@@ -1,7 +1,7 @@
 // 3. Extra runs conceded per team in the year 2016
 
-import matches from '../data/matches.json' assert {type : 'json'};
-import deliveries from '../data/deliveries.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
+import deliveries from '../../data/deliveries.json' assert {type : 'json'};
 
 function extraRunConcededPerTeam2016(){
     

@@ -1,6 +1,6 @@
 // Find the highest number of times one player has been dismissed by another player
 
-import deliveries from  '../data/deliveries.json' assert {type : 'json'};
+import deliveries from  '../../data/deliveries.json' assert {type : 'json'};
 
 function highest_dismissed_player() {
 

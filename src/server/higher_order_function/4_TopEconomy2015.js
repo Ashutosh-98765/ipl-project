@@ -1,7 +1,7 @@
 // Top 10 economical bowlers in the year 2015 
 
-import matches from '../data/matches.json' assert {type : 'json'};
-import deliveries from '../data/deliveries.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
+import deliveries from '../../data/deliveries.json' assert {type : 'json'};
 
 function economicBowler(){
 

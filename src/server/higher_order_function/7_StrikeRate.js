@@ -1,7 +1,7 @@
 // Find the strike rate of a batsman for each season
 
-import matches from '../data/matches.json' assert {type : 'json'};
-import deliveries from  '../data/deliveries.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
+import deliveries from  '../../data/deliveries.json' assert {type : 'json'};
 
 function strike_Rate_BatsMan_Each_Season(){
 

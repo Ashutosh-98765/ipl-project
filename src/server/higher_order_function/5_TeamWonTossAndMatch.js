@@ -1,7 +1,7 @@
 // 5. Find the number of times each team won the toss and also 
 // won the match
 
-import matches from '../data/matches.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
 
 function teamWonTossAndMatch(){
 

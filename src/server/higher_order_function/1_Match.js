@@ -1,6 +1,6 @@
 // 1.Number of matches played per year for all the years in IPL.
 
-import matches from '../data/matches.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
 
 function matches_per_year(){
     let matchesPerYear = {};

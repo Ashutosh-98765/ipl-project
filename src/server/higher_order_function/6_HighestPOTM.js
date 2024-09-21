@@ -1,4 +1,4 @@
-import matches from '../data/matches.json' assert {type : 'json'};
+import matches from '../../data/matches.json' assert {type : 'json'};
 
 function highest_POTM_Per_Season(){
 
