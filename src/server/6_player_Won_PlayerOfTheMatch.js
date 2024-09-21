@@ -3,29 +3,29 @@ import matches from '../data/matches.json' assert { type: 'json' }
 
 
 
-function playerWonPlayerOfTheMatch(){
-   let resultData = {};
+function player_Won_PlayerOfTheMatch(){
+   let playerList = {};
    for(let i=0; i<matches.length; i++){
-    let season = matches[i].season;
-    let playerOfTheMatch = matches[i].player_of_match;
-    if(resultData[season]){
-        if(resultData[season][playerOfTheMatch]){
-            resultData[season][playerOfTheMatch]++;
+    let { season , player_of_match } = matches[i]
+    
+    if(playerList[season]){
+        if(playerList[season][player_of_match]){
+            playerList[season][player_of_match]++;
         }
         else{
-            resultData[season][playerOfTheMatch] =1;
+            playerList[season][player_of_match] =1;
         }
     }
     else{
-        resultData[season]={};
-        resultData[season][playerOfTheMatch]=1;
+        playerList[season]={};
+        playerList[season][player_of_match]=1;
     }
    }
-   let result ={};
-   for(let key in resultData){
+   let playerOfTheSeason ={};
+   for(let key in playerList){
    let max = 0;
    let playerName = "";
-   let value = resultData[key];
+   let value = playerList[key];
    for(let player in value){
     if(value[player] > max){
         max = value[player]
@@ -33,14 +33,14 @@ function playerWonPlayerOfTheMatch(){
 
     }
    }
-   result[key] = {};
-   result[key][playerName] = max;
+   playerOfTheSeason[key] = {};
+   playerOfTheSeason[key][playerName] = max;
    }
-   return result;
+   return playerOfTheSeason;
 }
 
 
-let result = playerWonPlayerOfTheMatch();
+let result = player_Won_PlayerOfTheMatch();
 // console.log(result);
 const jsonData = JSON.stringify(result, null, 2);
 
