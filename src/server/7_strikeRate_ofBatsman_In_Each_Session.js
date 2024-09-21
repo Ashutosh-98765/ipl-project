@@ -4,44 +4,42 @@ import deliveries from '../data/deliveries.json' assert { type:'json'}
 
 
 function strikeRateOfBatsman(){
-    let resultData = {};
+    let  batsmanDataEachSeason= {};
     for(let i=0; i<matches.length;i++){
         let {season,id} = matches[i];
         for(let i=0; i<deliveries.length; i++){
             let {match_id , batsman , batsman_runs: btrun} = deliveries[i];
             if(id === match_id){
-                if(resultData[season]){
-                   if(resultData[season][batsman]){
-                    resultData[season][batsman]['totalRuns']+=Number(btrun);
-                    resultData[season][batsman]['totalBall']++;
+                if(batsmanDataEachSeason[season]){
+                   if(batsmanDataEachSeason[season][batsman]){
+                    batsmanDataEachSeason[season][batsman]['totalRuns']+=Number(btrun);
+                    batsmanDataEachSeason[season][batsman]['totalBall']++;
                    }
                    else{
-                    resultData[season][batsman] = {}
-                    resultData[season][batsman]={'totalRuns': Number(btrun) , 'totalBall':1}
+                    batsmanDataEachSeason[season][batsman]={'totalRuns': Number(btrun) , 'totalBall':1}
                    }
                 }
                 else{
-                    resultData[season]={};
-                    resultData[season][batsman]={};
-                    resultData[season][batsman]={'totalRuns': Number(btrun) , 'totalBall':1}
+                    batsmanDataEachSeason[season]={};
+                    batsmanDataEachSeason[season][batsman]={'totalRuns': Number(btrun) , 'totalBall':1}
                 }
             }
         }
     }
 
 
-    let result = {};
-    for(let key in resultData){
-        result[key] = {};
-        let value = resultData[key];
+    let strikeRateOfBatsmanEachSeason = {};
+    for(let key in batsmanDataEachSeason){
+        strikeRateOfBatsmanEachSeason[key] = {};
+        let value = batsmanDataEachSeason[key];
         for(let player in value){
             let totalBall = value[player]['totalBall'];
             let totalRuns = value[player]['totalRuns'];
             let strike = (totalRuns / totalBall) * 100;
-            result[key][player] = strike;
+            strikeRateOfBatsmanEachSeason[key][player] = strike;
         }
     }
-    return result;
+    return strikeRateOfBatsmanEachSeason;
 }
 
 let result = strikeRateOfBatsman();
