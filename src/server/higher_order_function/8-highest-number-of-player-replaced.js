@@ -1,33 +1,54 @@
-// Find the highest number of times one player has been dismissed by another player
+// Find the highest number of times one player has been dismissed by another player.
 
-import deliveries from  '../../data/deliveries.json' assert {type : 'json'};
+import fs from "fs";
+import deliveries from '../../data/deliveries.json' assert {type: 'json'};
 
-function highest_dismissed_player() {
-
-    let dismissed_player_stats = deliveries.reduce((dismissals, { player_dismissed, bowler }) => {
-        if (player_dismissed !== "") {
-            dismissals[player_dismissed] = dismissals[player_dismissed] || {};
-            dismissals[player_dismissed][bowler] = (dismissals[player_dismissed][bowler] || 0) + 1;
-        }
-        return dismissals;
-    }, {});
-
-
-    let highest_dismissal_player = Object.entries(dismissed_player_stats).reduce((player_dismissals, [player, bowlers]) => {
-        Object.entries(bowlers).reduce((acc, [bowler, max_count]) => {
-            if (player_dismissals.count < max_count) {
-                player_dismissals.count = max_count;
-                player_dismissals.bowler_name = bowler;
-                player_dismissals.player_name = player;
+function highestDismissedPlayer() {
+    let dismissedPlayerStats = {};
+    try {
+        dismissedPlayerStats = deliveries.reduce((dismissals, { player_dismissed, bowler }) => {
+            if (player_dismissed !== "") {
+                dismissals[player_dismissed] = dismissals[player_dismissed] || {};
+                dismissals[player_dismissed][bowler] = (dismissals[player_dismissed][bowler] || 0) + 1;
             }
-            return acc;
-        });
-        return player_dismissals;
-    }, { player_name: "", bowler_name: "", count: 0 });
+            return dismissals;
+        }, {});
+    }
+    catch (error) {
+        console.log("Error processing match data: ", error);
+        return {};
+    }
+    // console.log(dismissedPlayerStats);
 
-    return highest_dismissal_player;
+    let highestDismissalplayer = {};
+    try {
+        highestDismissalplayer = Object.entries(dismissedPlayerStats).reduce((playerDismissals, [player, bowlers]) => {
+            Object.entries(bowlers).reduce((acc, [bowler, maxCount]) => {
+                if (playerDismissals.count < maxCount) {
+                    playerDismissals.count = maxCount;
+                    playerDismissals.bowler_name = bowler;
+                    playerDismissals.player_name = player;
+                }
+                return acc;
+            });
+            return playerDismissals;
+        }, { player_name: "", bowler_name: "", count: 0 });
+    }
+    catch (error) {
+        console.log("Error processing match data: ", error);
+        return {};
+    }
+
+    return highestDismissalplayer;
 }
 
 
-console.log(highest_dismissed_player());
+let highestDismissalPlayer = highestDismissedPlayer();
 
+try {
+    fs.writeFileSync('/home/dell/JS-IPL-DATA-PROJECT/src/public/hof_output/highestDismissalCount.json', JSON.stringify(highestDismissalPlayer, null, 2));
+    console.log("File parsed successfully");
+}
+catch (error) {
+    console.log("File parsing failed ", error);
+}

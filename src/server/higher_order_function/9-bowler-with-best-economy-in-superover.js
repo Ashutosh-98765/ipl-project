@@ -1,48 +1,70 @@
-import deliveries from  '../../data/deliveries.json' assert {type : 'json'};
+// Find the bowler with the best economy in super overs
 
-function best_Economy_SuperOver(){
-    let bowlerStats = deliveries.reduce((acc , {bowler , is_super_over, total_runs}) => {
-        if(is_super_over === "1"){
-            if(!acc[bowler]){
-                acc[bowler] = {'totalRuns' : 0 , 'totalBalls' : 0};
-                acc[bowler]['totalRuns'] = acc[bowler]['totalRuns'] + Number(total_runs);
-                acc[bowler]['totalBalls']++;
+import fs from "fs";
+import deliveries from '../../data/deliveries.json' assert {type: 'json'};
+
+function bowlersWithbestEconomyInSuperOver() {
+    let bowlerStatsInSuperOver = {};
+    try {
+        bowlerStatsInSuperOver = deliveries.reduce((acc, { bowler, is_super_over, total_runs }) => {
+            if (is_super_over === "1") {
+                if (!acc[bowler]) {
+                    acc[bowler] = { 'totalRuns': 0, 'totalBalls': 0 };
+                    acc[bowler]['totalRuns'] = acc[bowler]['totalRuns'] + Number(total_runs);
+                    acc[bowler]['totalBalls']++;
+                }
+                else {
+                    acc[bowler]['totalRuns'] = acc[bowler]['totalRuns'] + Number(total_runs);
+                    acc[bowler]['totalBalls']++;
+                }
             }
-            else{
-                acc[bowler]['totalRuns'] = acc[bowler]['totalRuns'] + Number(total_runs);
-                acc[bowler]['totalBalls']++;
-            }
-        }
-        return acc;
-    }, {});
+            return acc;
+        }, {});
+    }
+    catch (error) {
+        console.log("Error processing match data: ", error);
+        return {};
+    }
+    // console.log(bowlerStatsInSuperOver);
 
-    // console.log(bowlerStats);
+    let economyOfBowler = {}
+    try {
+        economyOfBowler = Object.entries(bowlerStatsInSuperOver).reduce((acc, [bowler, bowlerStats]) => {
+            let economy = bowlerStats['totalRuns'] / (bowlerStats['totalBalls'] / 6);
+            acc[bowler] = economy;
+            return acc;
+        }, []);
+    }
+    catch (error) {
+        console.log("Error processing match data: ", error);
+        return {};
+    }
+    // console.log(economyOfBowler);
 
-    let economy = Object.entries(bowlerStats).reduce((acc , [bowler , stats]) => {
-        let eco = stats['totalRuns'] / (stats['totalBalls']/6);
-        acc[bowler] = eco;
-        return acc;
-    },[]);
-    // console.log(economy);
+    let sortedEconomy = {};
+    try {
+        sortedEconomy = Object.entries(economyOfBowler).sort(([, a], [, b]) => {
+            return a - b;
+        }).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {});
+    }
+    catch (error) {
+        console.log("Error processing match data: ", error);
+        return {};
+    }
+    // return sortedEconomy;
 
-    // economy.sort(([,a],[,b]) => {
-    //     console.log(a , b);
-    //     return a - b;
-    // });
+    return Object.entries(sortedEconomy).slice(0,1);
 
-
-
-
-    let sortedEconomy = Object.entries(economy).sort(([,a] , [,b]) => {
-        return a-b;
-    }).reduce((acc , [key , value]) => {
-        acc[key] = value;
-        return acc;
-    }, {});
-
-    // console.log(sortedEconomy);
-
-    console.log(Object.entries(sortedEconomy).slice(0,1));
-    
 }
-best_Economy_SuperOver();
+let sortedEconomy = bowlersWithbestEconomyInSuperOver();
+
+try {
+    fs.writeFileSync('/home/dell/JS-IPL-DATA-PROJECT/src/public/hof_output/topEconomicBowler2015.json', JSON.stringify(sortedEconomy, null, 2));
+    console.log("File parsed successfully");
+}
+catch (error) {
+    console.log("File parsing failed ", error);
+}

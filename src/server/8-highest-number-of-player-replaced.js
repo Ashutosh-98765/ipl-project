@@ -1,68 +1,60 @@
-import fs from 'fs';
+// Find the highest number of times one player has been dismissed by another player
 
-import deliveries from '../data/deliveries.json' assert { type:'json'}
+import deliveries from '../data/deliveries.json' assert { type: 'json'}
 
+export function highestNumberOfPlayerDismissed() {
 
+    let dismissedPlayersStats = {};
+    try {
+        for (let i = 0; i < deliveries.length; i++) {
 
-function highest_dismissed_player() {
+            const { player_dismissed, bowler } = deliveries[i];
 
-    let dismissed_player_stats = {};
-
-    for (let i = 0; i < deliveries.length; i++) {
-
-        const { player_dismissed, bowler } = deliveries[i];
-
-        if (player_dismissed !== "") {
-            if (dismissed_player_stats[player_dismissed]) {
-                if (dismissed_player_stats[player_dismissed][bowler]) {
-                    dismissed_player_stats[player_dismissed][bowler]++;
+            if (player_dismissed !== "") {
+                if (dismissedPlayersStats[player_dismissed]) {
+                    if (dismissedPlayersStats[player_dismissed][bowler]) {
+                        dismissedPlayersStats[player_dismissed][bowler]++;
+                    }
+                    else {
+                        dismissedPlayersStats[player_dismissed][bowler] = 1;
+                    }
                 }
                 else {
-                    dismissed_player_stats[player_dismissed][bowler] = 1;
+                    dismissedPlayersStats[player_dismissed] = {};
+                    dismissedPlayersStats[player_dismissed][bowler] = 1;
                 }
             }
-            else {
-                dismissed_player_stats[player_dismissed] = {};
-                dismissed_player_stats[player_dismissed][bowler] = 1;
+        }
+        // console.log(dismissed_player_stats)
+
+
+        let highestDismissalPlayer = {};
+
+        let playerName = "";
+        let bowlerName = "";
+        let maxCount = 0;
+
+        for (let player in dismissedPlayersStats) {
+
+            let playerStats = dismissedPlayersStats[player];
+
+            for (let bowler in playerStats) {
+                if (playerStats[bowler] >= maxCount) {
+                    maxCount = playerStats[bowler];
+                    bowlerName = bowler;
+                    playerName = player;
+                }
             }
         }
-    }
-// console.log(dismissed_player_stats)
 
+        highestDismissalPlayer[playerName] = {};
+        highestDismissalPlayer[playerName][bowlerName] = maxCount;
 
-    let highest_dismissal_player = {};
-
-    let playerName = "";
-    let bowlerName = "";
-    let max_count = 0;
-
-    for (let player in dismissed_player_stats) {
-
-        let player_stats = dismissed_player_stats[player];
-
-        for (let bowler in player_stats) {
-            if (player_stats[bowler] > max_count) {
-                max_count = player_stats[bowler];
-                bowlerName = bowler;
-                playerName = player;
-            }
-        }
+        return highestDismissalPlayer;
     }
 
-    highest_dismissal_player[playerName] = {};
-    highest_dismissal_player[playerName][bowlerName] = max_count;
-
-    return highest_dismissal_player;
-
-}
-// console.log(highest_dismissed_player());
-
-let highest_dismissal_player = highest_dismissed_player();
-const jsonData = JSON.stringify(highest_dismissal_player, null, 2);
-
-try {
-  fs.writeFileSync('/home/dell/JS-IPL-DATA-PROJECT/src/public/output/8_highest_No_Player_Replaced.json' , jsonData);
-  console.log("File parsed successfully");
-} catch (error) {
-  console.log("Error occured while parsing ",error);
+    catch (error) {
+        console.error("Error calculating highest dismissed player: ", error);
+        return {};
+    }
 }

@@ -1,39 +1,31 @@
 // 1.Number of matches played per year for all the years in IPL.
 
-import matches from '../../data/matches.json' assert {type : 'json'};
+import fs from 'fs';
+import matches from '../../data/matches.json' assert {type: 'json'};
 
-function matches_per_year(){
-    let matchesPerYear = {};
-     matches.forEach(({season}) => {
-        matchesPerYear[season] = (matchesPerYear[season] || 0) + 1;
-    })
-    console.log(matchesPerYear);
+function matchesPerYear() {
+    let matchesPerYearData = {};
+    try {
+        matchesPerYearData = matches.reduce((acc, { season }) => {
+            acc[season] = (acc[season] || 0) + 1;
+            return acc;
+        }, {});
+    }
+    catch (error) {
+        console.log("Error processing matches data: ", error);
+        return {};
+    }
+
+    return matchesPerYearData;
+}
+let matchesPerYearData = matchesPerYear();
+
+try {
+    fs.writeFileSync('/home/dell/JS-IPL-DATA-PROJECT/src/public/hof_output/matchesPerYear.json', JSON.stringify(matchesPerYearData, null, 2));
+    console.log("File parsed successfully");
+}
+catch (error) {
+    console.log("File parsing failed ", error);
+
 }
 
-matches_per_year();
-
-
-function matchesPerYearReduce(){
-    let result = matches.reduce((acc , {season}) =>{
-        acc[season] = (acc[season] || 0) + 1;
-        return acc;
-    },{});
-    console.log(result);
-}
-matchesPerYearReduce();
-
-function matches_PerYear_Reduce(){
-    let result = matches.reduce((acc, item)=> {
-        let {season} = item;
-        if(!acc[season])
-        {
-            acc[season] = 0;
-        }
-        
-            acc[season]++;
-    
-        return acc;
-    },{});
-    return result;
-}
-console.log(matches_PerYear_Reduce())
